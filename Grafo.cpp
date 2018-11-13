@@ -76,12 +76,17 @@ void printAllNode (Node* N){ //MOSTRA TODOS OS NÓS EXISTENTES
 Node* f_node (){ //INICIA O PRIMEIRO NÓ
 	Node* N = (Node*) malloc (sizeof(Node));
 	N->id = 0;
+	strcpy(N->nome,"Nenhum no");
+	N->prox = NULL;
 	return N;
 }
 
 Path* f_path(){ //INICIA O PRIMEIRO CAMINHO
 	Path* P = (Path*) malloc (sizeof(Path));
 	P->a=0;
+	P->b=0;
+	P->prox=NULL;
+	P->id=0;
 	return P;
 }
 
@@ -150,22 +155,52 @@ int gotoNode (int my_node, int dest_node, Path* P){ //CAMINHA DO NÓ A ATÉ O B
 		return my_node;
 }
 
+void loadPreSet(Node* N,Path* P){
+	createNode(N,"Piscina");
+	createNode(N,"Sala de Jogos");
+	createNode(N,"Quarto de Hospedes");
+	createNode(N,"Bar");
+	createNode(N,"Dormitorio");
+	createNode(N,"Dependencia de empregada");
+	createNode(N,"Adega");
+	createNode(N,"Cozinha");
+	createNode(N,"Dispensa");
+	createNode(N,"Saida");
+	createPath(P,1,10);
+	createPath(P,1,10);
+	createPath(P,1,9);
+	createPath(P,1,8);
+	createPath(P,1,3);
+	createPath(P,2,3);
+	createPath(P,2,3);
+	createPath(P,3,4);
+	createPath(P,4,5);
+	createPath(P,5,6);
+	createPath(P,5,6);
+	createPath(P,7,8);
+	createPath(P,7,8);
+	createPath(P,8,9);
+	printf("Estrutura carregada.\n");
+}
+
 int main() {
 	Node* N = f_node();
 	Path* P = f_path();
-	int me=1; //ID DO NÓ AONDE COMEÇO.
+	int me=10; //ID DO NÓ AONDE COMEÇO.
 	int opt;
-	
-	createNode(N,"Um");
-	createNode(N,"Dois");
-	createNode(N,"Tres");
-	createNode(N,"Quatro");
-	createNode(N,"Cinco");
-	createPath(P,1,2);
-	createPath(P,1,3);
-	createPath(P,1,4);
-	createPath(P,2,3);
-	createPath(P,2,5);
+	printf("Voce deseja precarregar a estrutura de nos do trabalho?\n1- Sim\n");
+	scanf("%d",&opt);
+	printf("\n");
+	switch (opt){
+		case 1:
+			loadPreSet(N,P);
+			break;
+		default:
+			printf("Opcao invalida, iniciando programa com estrutura de nos zerada.\n");
+	}
+	system("pause");
+	system("cls");
+
 	
 	while (true){
 		printf("O que voce quer fazer?\n1- Aonde eu estou?\n2- Ir para.\n3- Mostrar todos os nos\n4- Mostrar todos os caminhos\nDigite a opcao: ");
@@ -173,7 +208,7 @@ int main() {
 		printf("\n");
 		switch (opt){
 			case 1:
-				printf("Eu sou o %s\n",getNodeName(N,me));
+				printf("Eu estou em %s\n",getNodeName(N,me));
 				break;
 			case 2:
 				printf("digite o caminho que voce quer ir: ");
