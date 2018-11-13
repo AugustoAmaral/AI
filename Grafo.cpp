@@ -136,36 +136,36 @@ void createNode (Node* N, char nome[40]){ //CRIA O NÓ COM O NOME PASSADO
 	}
 }
 
-int gotoNode (int my_node, int dest_node, Path* P){ //CAMINHA DO NÓ A ATÉ O B
+int gotoNode (int my_node, int dest_node, Path* P,Node* N){ //CAMINHA DO NÓ A ATÉ O B
 	while (P != NULL){
 		if (P->a == my_node)
 			if (P->b == dest_node){
-				printf("O caminho e possivel, movendo para %d\n",dest_node);
+				printf("O caminho de %s ate %s e possivel, movendo para %s\n",getNodeName(N,my_node),getNodeName(N,dest_node),getNodeName(N,dest_node));
 				return dest_node;
 			}
 		if (P->b == my_node) //CASO O NÓ SEJA DIRECIONAL, REMOVER ESSA CONDIÇÃO
 			if (P->a == dest_node){
-				printf("O caminho e possivel, movendo para %d\n",dest_node);
+				printf("O caminho de %s ate %s e possivel, movendo para %s\n",getNodeName(N,my_node),getNodeName(N,dest_node),getNodeName(N,dest_node));
 				return dest_node;
 			}
 		if ((P->a != my_node) or (P->b != my_node))
-			return (gotoNode(my_node,dest_node,P->prox));
+			return (gotoNode(my_node,dest_node,P->prox,N));
 	}
-		printf("O caminho nao foi possivel.\n");
+		printf("O caminho de %s ate %s nao foi possivel.\n",getNodeName(N,my_node),getNodeName(N,dest_node));
 		return my_node;
 }
 
 void loadPreSet(Node* N,Path* P){
-	createNode(N,"Piscina");
-	createNode(N,"Sala de Jogos");
-	createNode(N,"Quarto de Hospedes");
-	createNode(N,"Bar");
-	createNode(N,"Dormitorio");
-	createNode(N,"Dependencia de empregada");
-	createNode(N,"Adega");
-	createNode(N,"Cozinha");
-	createNode(N,"Dispensa");
-	createNode(N,"Saida");
+	createNode(N,"piscina");
+	createNode(N,"sala de Jogos");
+	createNode(N,"quarto de hospedes");
+	createNode(N,"bar");
+	createNode(N,"dormitorio");
+	createNode(N,"dependencia de empregada");
+	createNode(N,"adega");
+	createNode(N,"cozinha");
+	createNode(N,"dispensa");
+	createNode(N,"jardim");
 	createPath(P,1,10);
 	createPath(P,1,10);
 	createPath(P,1,9);
@@ -187,7 +187,8 @@ int main() {
 	Node* N = f_node();
 	Path* P = f_path();
 	int me=10; //ID DO NÓ AONDE COMEÇO.
-	int opt;
+	int opt; //OPCOES QUE SERÃO LIDAS COMO INTEIRO
+	char opt_char[40]; //OPCOES QUE SERAO LIDAS COMO CHAR
 	printf("Voce deseja precarregar a estrutura de nos do trabalho?\n1- Sim\n");
 	scanf("%d",&opt);
 	printf("\n");
@@ -203,7 +204,7 @@ int main() {
 
 	
 	while (true){
-		printf("O que voce quer fazer?\n1- Aonde eu estou?\n2- Ir para.\n3- Mostrar todos os nos\n4- Mostrar todos os caminhos\nDigite a opcao: ");
+		printf("O que voce quer fazer?\n1- Aonde eu estou?\n2- Ir para (ID).\n3- Ir para (nome) (NAO FUNCIONA AINDA).\n4- Mostrar todos os nos\n5- Mostrar todos os caminhos\nDigite a opcao: ");
 		scanf("%d",&opt);
 		printf("\n");
 		switch (opt){
@@ -211,15 +212,21 @@ int main() {
 				printf("Eu estou em %s\n",getNodeName(N,me));
 				break;
 			case 2:
-				printf("digite o caminho que voce quer ir: ");
+				printf("digite o numero do lugar que voce quer ir: ");
 				scanf("%d",&opt);
-				me = gotoNode(me,opt,P);
+				me = gotoNode(me,opt,P,N);
 				printf("\n");
 				break;
 			case 3:
-				printAllNode(N);
+				printf("digite o nome do lugar que voce quer ir: ");
+				scanf("%s",&opt_char);
+				me = gotoNode(me,getNodeId(N,opt_char),P,N);
+				printf("\n");
 				break;
 			case 4:
+				printAllNode(N);
+				break;
+			case 5:
 				printAllPath(N,P);
 				break;
 			default:
