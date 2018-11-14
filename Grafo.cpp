@@ -11,10 +11,9 @@ SE PRECISAREM IR PARA O PROXIMO NÓ, ELAS VÃO SE CHAMAR PASSANDO O PROXIMO NÓ.
 #include <stdlib.h>
 #include <windows.h>
 
-
 typedef struct path{
 	struct path* prox;
-	int a,b,id;
+	int a,b,id,flag;
 }Path;
 
 typedef struct node{
@@ -22,6 +21,8 @@ typedef struct node{
 	int id;
 	char nome[40];
 }Node;
+
+int gotoNode (int, int, Path*, Node*,int = 0); //FLAG VAI COMO PADRÃO OCULTO 0
 
 int getNodeId(Node* N, char nome[40]){ //RETORNA O ID DO NÓ CUJO NOME FOI PASSADO
 	if (N == NULL){
@@ -87,6 +88,7 @@ Path* f_path(){ //INICIA O PRIMEIRO CAMINHO
 	P->b=0;
 	P->prox=NULL;
 	P->id=0;
+	P->flag=0;
 	return P;
 }
 
@@ -101,6 +103,7 @@ void createPath (Path* P, int a, int b){ //CRIA O CAMINHO DE A ATÉ B
 		P->b = b;
 		P->prox = NULL;
 		P->id=0;
+		P->flag=0;
 	}
 	else{
 		temp=1;
@@ -113,6 +116,7 @@ void createPath (Path* P, int a, int b){ //CRIA O CAMINHO DE A ATÉ B
 		P->prox->b = b;
 		P->prox->prox = NULL;
 		P->prox->id=temp;
+		P->prox->flag=0;
 	}
 }
 
@@ -136,20 +140,30 @@ void createNode (Node* N, char nome[40]){ //CRIA O NÓ COM O NOME PASSADO
 	}
 }
 
-int gotoNode (int my_node, int dest_node, Path* P,Node* N){ //CAMINHA DO NÓ A ATÉ O B
+int gotoNode (int my_node, int dest_node, Path* P,Node* N,int flag){ //CAMINHA DO NÓ A ATÉ O B
 	while (P != NULL){
 		if (P->a == my_node)
 			if (P->b == dest_node){
-				printf("O caminho de %s ate %s e possivel, movendo para %s\n",getNodeName(N,my_node),getNodeName(N,dest_node),getNodeName(N,dest_node));
-				return dest_node;
+				if(P->flag==0){
+					P->flag=flag;
+					printf("O caminho de %s ate %s e possivel, movendo para %s\n",getNodeName(N,my_node),getNodeName(N,dest_node),getNodeName(N,dest_node));
+					return dest_node;
+				}
+				else
+					printf("Caminho encontrado, porem o mesmo esta marcado, procurando outro caminho.\n");
 			}
 		if (P->b == my_node) //CASO O NÓ SEJA DIRECIONAL, REMOVER ESSA CONDIÇÃO
 			if (P->a == dest_node){
-				printf("O caminho de %s ate %s e possivel, movendo para %s\n",getNodeName(N,my_node),getNodeName(N,dest_node),getNodeName(N,dest_node));
-				return dest_node;
+				if (P->flag==0){
+					P->flag=flag;
+					printf("O caminho de %s ate %s e possivel, movendo para %s\n",getNodeName(N,my_node),getNodeName(N,dest_node),getNodeName(N,dest_node));
+					return dest_node;
+				}
+				else
+					printf("Caminho encontrado, porem o mesmo esta marcado, procurando outro caminho.\n");
 			}
 		if ((P->a != my_node) or (P->b != my_node))
-			return (gotoNode(my_node,dest_node,P->prox,N));
+			return (gotoNode(my_node,dest_node,P->prox,N,flag));
 	}
 		printf("O caminho de %s ate %s nao foi possivel.\n",getNodeName(N,my_node),getNodeName(N,dest_node));
 		return my_node;
@@ -183,6 +197,12 @@ void loadPreSet(Node* N,Path* P){
 	printf("Estrutura carregada.\n");
 }
 
+void isEulerian (Node* N,Path* P,int init){
+	
+	
+}
+
+
 int main() {
 	Node* N = f_node();
 	Path* P = f_path();
@@ -204,7 +224,7 @@ int main() {
 
 	
 	while (true){
-		printf("O que voce quer fazer?\n1- Aonde eu estou?\n2- Ir para (ID).\n3- Ir para (nome) (NAO FUNCIONA AINDA).\n4- Mostrar todos os nos\n5- Mostrar todos os caminhos\nDigite a opcao: ");
+		printf("O que voce quer fazer?\n1- Aonde eu estou?\n2- Ir para (ID).\n3- Ir para (flag).\n4- Mostrar todos os nos\n5- Mostrar todos os caminhos\nDigite a opcao: ");
 		scanf("%d",&opt);
 		printf("\n");
 		switch (opt){
@@ -212,15 +232,15 @@ int main() {
 				printf("Eu estou em %s\n",getNodeName(N,me));
 				break;
 			case 2:
-				printf("digite o numero do lugar que voce quer ir: ");
+				printf("digite o id do lugar que voce quer ir: ");
 				scanf("%d",&opt);
 				me = gotoNode(me,opt,P,N);
 				printf("\n");
 				break;
 			case 3:
-				printf("digite o nome do lugar que voce quer ir: ");
-				scanf("%s",&opt_char);
-				me = gotoNode(me,getNodeId(N,opt_char),P,N);
+				printf("digite o id do lugar que voce quer ir: ");
+				scanf("%d",&opt);
+				me = gotoNode(me,opt,P,N,1);
 				printf("\n");
 				break;
 			case 4:
