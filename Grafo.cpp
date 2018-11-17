@@ -6,6 +6,7 @@ SE PRECISAREM IR PARA O PROXIMO NÓ, ELAS VÃO SE CHAMAR PASSANDO O PROXIMO NÓ.
 
 
 */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -227,6 +228,13 @@ void loadPreSetEuler(Node* N,Path* P){
 	createPath(P,1,3);
 	createPath(P,3,2);
 	createPath(P,2,4);
+	/*createNode(N,"Um");
+	createNode(N,"Dois");
+	createNode(N,"Tres");
+	createPath(P,1,2);
+	createPath(P,1,2);
+	createPath(P,1,3);
+	createPath(P,2,3);*/
 	
 	printf("Estrutura carregada: Exemplo euleriano.\n");
 }
@@ -242,12 +250,12 @@ int checkAllFlags (Path* P){
 		if (P->prox != NULL)
 			checkAllFlags(P->prox);
 		else{
-			printf("\n\n\nTodos Paths percorridos.\n\n");
-			return 0;
+			printf("Todos Paths percorridos.\n");
+			return 1;
 		}
 	else{
-		printf("\n\n\nPath vazio encontrado.\n\n");
-		return 1;
+		printf("Path vazio encontrado.\n");
+		return 0;
 	}
 }
 
@@ -264,12 +272,19 @@ Path* copyAllPaths(Path* P){
 }
 
 int possiblePaths(Path* P, int me){
-	if (P == NULL)
-		return 0;
+	if (P == NULL){
+		printf("No recebido e nulo (PP)\n");
+	}
 	if (((P->a == me) || (P->b == me)) && P->flag == 0) //AQUI EU TO CONSIDERANDO IDA E VOLTA, OU SEJA, NO SEM DIREÇÃO
-		return (1+possiblePaths(P->prox,me));
+		if (P->prox == NULL)
+			return 1;
+		else
+			return (1+possiblePaths(P->prox,me));
 	else
-		return (0+possiblePaths(P->prox,me));
+		if (P->prox == NULL)
+			return 0;
+		else
+			return (0+possiblePaths(P->prox,me));
 }
 
 void freePath(Path* P){
@@ -282,29 +297,39 @@ void freePath(Path* P){
 	free(P);
 }
 
-void isEulerian (Path* P, Node* N, int me){
-	int paths=possiblePaths(P,me);
-	Path* P_tmp = P;
-	int test=1;
-	if (paths>0)
-		while (paths>0){
-			P_tmp=P;
-			if (me != gotoNode(me,test,P,N)){ //SE ISSO FOR DIFERENTE, EU POSSO AVANCAR
-				if (paths > 1)
-					P_tmp = copyAllPaths(P); //COPIO UM CAMINHO
-				//printf("\n\nBranch em me: %d e path: %d\n\n",me,test);
-				isEulerian(P_tmp,N,gotoNode(me,test,P_tmp,N,1)); //TESTO SE É EULERIANO AGORA TENDO UM NOVO EU
-				//freePath(P_tmp);
-				//printf("\n\nFECHEI UM EULERIANO %d %d\n\n",me,test);
-				test++;
-				paths--;
+void isEulerian (Path* P, Node* N, int me, int *answer){ //ANSWER precisa ser passado como referencia
+	int paths = possiblePaths(P,me);
+	Path* p_tmp;
+	int next_node = 1;
+	if (paths > 1){
+		while (paths > 0){
+			if (me != gotoNode(me,next_node,P,N)){
+				p_tmp = copyAllPaths(P);
+				isEulerian(p_tmp,N,gotoNode(me,next_node,p_tmp,N,1),answer);
+				paths = possiblePaths(P,next_node);
+				next_node++;
 			}
 			else{
-				test++;
+				next_node++;
+				paths = possiblePaths(P,next_node);
 			}
 		}
-	else{
-		checkAllFlags(P);
+	}
+	else if (paths == 1){
+		while (paths == 1){
+			if (me != gotoNode(me,next_node,P,N)){
+				me = gotoNode(me,next_node,P,N,1);
+				next_node = 1;
+				paths = possiblePaths(P,me);
+			}
+			else
+			next_node++;
+		}
+		isEulerian(P,N,me,answer);
+	}
+	else if (paths == 0){
+		*answer = *answer + checkAllFlags(P);
+		printf("\n\n(DEBUG)Answer: %d.\n\n",*answer);
 	}
 }
 
@@ -377,7 +402,12 @@ int main() {
 				printf("\n");
 				break;
 			case 10:
-				isEulerian(P,N,me);
+				opt = 0;
+				isEulerian(P,N,me,&opt);
+				if (opt>0)
+					printf("\n\n\nForam encontrados %d caminhos eulerianos.\n",opt);
+				else
+					printf("\n\n\nNao foram encontrados caminhos eulerianos.\n",opt);
 				break;
 			default:
 				printf("Opcao invalida.\n");
