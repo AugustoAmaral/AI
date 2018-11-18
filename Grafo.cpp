@@ -22,7 +22,7 @@ void printGraphModel (int x){
 			printf ("|    / \\    |\n");
 			printf ("|   B---C   |\n");
 			printf ("|  //       |\n");
-			printf ("|  D--2--E  |\n");
+			printf ("|  D=====E  |\n");
 			printf ("|___________|\n");
 			break;
 		case 2:	
@@ -45,7 +45,7 @@ void printGraphModel (int x){
 			printf ("|    / \\    |\n");
 			printf ("|   B---C   |\n");
 			printf ("|  /        |\n");
-			printf ("|  D--2--E  |\n");
+			printf ("|  D=====E  |\n");
 			printf ("|___________|\n");
 			break;
 		default:
@@ -454,7 +454,7 @@ int main() {
 	while (true){
 		printGraphModel (global_graph);
 		printf("\nEu estou em %s\n\n",getNodeName(N,me));
-		printf("O que voce quer fazer?\n1- Adicionar um no(verice)\n2- Adicionar um caminho(aresta)\n3- Ir para no.\n4- Ir para (flag).\n5- Mostrar todos os nos\n6- Mostrar todos os caminhos\n7- Resetar Flags\n8- Checar: todos os camihos estao com flag?\n9- Copiar todos os caminhos e os mostrar.\n10- Quantos caminhos tem o no X\n11- Esse grafo tem quantos camihos eulerianos?\n100- Sair.\nDigite a opcao: ");
+		printf("O que voce quer fazer?\n1- Adicionar um no(vertice)\n2- Adicionar um caminho(aresta)\n3- Ir para no.\n4- Ir para (flag).\n5- Mostrar todos os nos\n6- Mostrar todos os caminhos\n7- Resetar Flags\n8- Checar: todos os camihos estao com flag?\n9- Copiar todos os caminhos e os mostrar.\n10- Quantos caminhos tem o no X\n11- Esse grafo tem quantos camihos eulerianos?\n100- Sair.\nDigite a opcao: ");
 		scanf("%d",&opt);
 		printf("\n");
 		switch (opt){
