@@ -12,6 +12,48 @@ SE PRECISAREM IR PARA O PROXIMO NÓ, ELAS VÃO SE CHAMAR PASSANDO O PROXIMO NÓ.
 #include <stdlib.h>
 #include <windows.h>
 
+int global_graph = 0;
+
+void printGraphModel (int x){
+	switch (x){
+		case 1:
+			printf (" _____1_____\n");
+			printf ("|     A     |\n");
+			printf ("|    / \\    |\n");
+			printf ("|   B---C   |\n");
+			printf ("|  //       |\n");
+			printf ("|  D--2--E  |\n");
+			printf ("|___________|\n");
+			break;
+		case 2:	
+			printf (" _____2_____\n");
+			printf ("| D---A     |\n");
+			printf ("|  \\// \\    |\n");
+			printf ("|   B---C   |\n");
+			printf ("|___________|\n");
+			break;
+		case 3:
+			printf (" _____3_____\n");
+			printf ("|     A     |\n");
+			printf ("|    //\\    |\n");
+			printf ("|   B---C   |\n");
+			printf ("|___________|\n");
+			break;
+		case 4:
+			printf (" _____4_____\n");
+			printf ("|     A     |\n");
+			printf ("|    / \\    |\n");
+			printf ("|   B---C   |\n");
+			printf ("|  /        |\n");
+			printf ("|  D--2--E  |\n");
+			printf ("|___________|\n");
+			break;
+		default:
+			printf("");
+			break;
+	}
+}
+
 typedef struct path{
 	struct path* prox;
 	int a,b,id,flag;
@@ -53,7 +95,7 @@ char* getNodeName (Node* N, int id){ // RETORNA O NOME DO NÓ COM O ID PASSADO
 }
 
 void printPath (Node* N, Path* P){ //PRINTA TO CAMINHO QUE FOI PASSADO E SEU ID
-	printf("(%d)Path: %s <-> %s, ID: %d\n",P->flag,getNodeName(N,P->a),getNodeName(N,P->b),P->id);
+	printf("(Flag: %d)Path: %s <-> %s, ID: %d\n",P->flag,getNodeName(N,P->a),getNodeName(N,P->b),P->id);
 }
 
 void printAllPath (Node* N, Path* P){ //MOSTRA TODOS OS CAMINHOS DISPONIVEIS
@@ -122,7 +164,7 @@ void createPath (Path* P, int a, int b,int flag){ //CRIA O CAMINHO DE A ATÉ B
 	}
 }
 
-void createNode (Node* N, char nome[40]){ //CRIA O NÓ COM O NOME PASSADO
+void createNode (Node* N, char* nome){ //CRIA O NÓ COM O NOME PASSADO
 	if (N == NULL){
 		printf("No recebido e nulo(CN).\n");
 		exit(0);
@@ -205,38 +247,64 @@ void loadPreSet(Node* N,Path* P){
 	printf("Estrutura carregada: trabalho.\n");
 }
 
-void loadPreSetEuler(Node* N,Path* P){
-	/*createNode(N,"Um");
-	createNode(N,"Dois");
-	createNode(N,"Tres");
-	createNode(N,"Quatro");
-	createNode(N,"Cinco");
+void loadPreSetUm(Node* N,Path* P){
+	createNode(N,"A");
+	createNode(N,"B");
+	createNode(N,"C");
+	createNode(N,"D");
+	createNode(N,"E");
 	createPath(P,1,2);
 	createPath(P,1,3);
 	createPath(P,2,3);
 	createPath(P,2,4);
 	createPath(P,2,4);
 	createPath(P,4,5);
-	createPath(P,4,5);*/
-	createNode(N,"Um");
-	createNode(N,"Dois");
-	createNode(N,"Tres");
-	createNode(N,"Quatro");
+	createPath(P,4,5);
+	
+	printf("Estrutura carregada: Exemplo um.\n");
+}
+
+void loadPreSetDois(Node* N,Path* P){
+	createNode(N,"A");
+	createNode(N,"B");
+	createNode(N,"C");
+	createNode(N,"D");
 	createPath(P,1,2);
 	createPath(P,1,2);
 	createPath(P,1,4);
 	createPath(P,1,3);
 	createPath(P,3,2);
 	createPath(P,2,4);
-	/*createNode(N,"Um");
-	createNode(N,"Dois");
-	createNode(N,"Tres");
+	
+	printf("Estrutura carregada: Exemplo Dois.\n");
+}
+
+void loadPreSetTres  (Node* N,Path* P){
+	createNode(N,"A");
+	createNode(N,"B");
+	createNode(N,"C");
 	createPath(P,1,2);
 	createPath(P,1,2);
 	createPath(P,1,3);
-	createPath(P,2,3);*/
+	createPath(P,2,3);
 	
-	printf("Estrutura carregada: Exemplo euleriano.\n");
+	printf("Estrutura carregada: Exemplo tres.\n");
+}
+
+void loadPreSetQuatro(Node* N,Path* P){
+	createNode(N,"A");
+	createNode(N,"B");
+	createNode(N,"C");
+	createNode(N,"D");
+	createNode(N,"E");
+	createPath(P,1,2);
+	createPath(P,1,3);
+	createPath(P,2,3);
+	createPath(P,2,4);
+	createPath(P,4,5);
+	createPath(P,4,5);
+	
+	printf("Estrutura carregada: Exemplo um.\n");
 }
 
 void resetFlag (Path* P){
@@ -337,18 +405,43 @@ int main() {
 	Node* N = f_node();
 	Path* P = f_path();
 	int me; //ID DO NÓ AONDE COMEÇO.
-	int opt; //OPCOES QUE SERÃO LIDAS COMO INTEIRO
+	int opt,opt_aux,opt_aux_duo,opt_loop; //OPCOES QUE SERÃO LIDAS COMO INTEIRO
 	char opt_char[40]; //OPCOES QUE SERAO LIDAS COMO CHAR
-	printf("Voce deseja precarregar alguma estrutura de nos?\n1- Trabalho\n2- Euleriano\n");
-	scanf("%d",&opt);
+	int confirm = 0;
+	opt_aux=opt_aux_duo = 0;
+	while (confirm != 1){
+		printf("Voce deseja precarregar alguma estrutura de nos?\n");
+		printf("Exemplos: (1),(2),(3),(4),(5 - Trabalho)\n");
+		scanf("%d",&opt);
+		system("cls");
+		printf("Voce selecionou a opcao %d, deseja carregar essa estrutura? (1- Sim)\n",opt);
+		printGraphModel(opt);
+		scanf("%d",&confirm);
+	}
 	printf("\n");
 	switch (opt){
-		case 1:
+		case 5:
 			loadPreSet(N,P);
 			me=10;
 			break;
+		case 1:
+			loadPreSetUm(N,P);
+			global_graph=1;
+			me=1;
+			break;
 		case 2:
-			loadPreSetEuler(N,P);
+			loadPreSetDois(N,P);
+			global_graph=2;
+			me=1;
+			break;
+		case 3:
+			loadPreSetTres(N,P);
+			global_graph=3;
+			me=1;
+			break;
+		case 4:
+			loadPreSetQuatro(N,P);
+			global_graph=4;
 			me=1;
 			break;
 		default:
@@ -359,55 +452,83 @@ int main() {
 
 	
 	while (true){
-		printf("O que voce quer fazer?\n1- Aonde eu estou?\n2- Ir para (ID).\n3- Ir para (flag).\n4- Mostrar todos os nos\n5- Mostrar todos os caminhos\n6- Resetar Flags\n7- Check All Paths\n8- Copy all path, print original and copy\n9- Quantos caminhos tem o comodo X\n10- Is eulerian?\nDigite a opcao: ");
+		printGraphModel (global_graph);
+		printf("\nEu estou em %s\n\n",getNodeName(N,me));
+		printf("O que voce quer fazer?\n1- Adicionar um no(verice)\n2- Adicionar um caminho(aresta)\n3- Ir para no.\n4- Ir para (flag).\n5- Mostrar todos os nos\n6- Mostrar todos os caminhos\n7- Resetar Flags\n8- Checar: todos os camihos estao com flag?\n9- Copiar todos os caminhos e os mostrar.\n10- Quantos caminhos tem o no X\n11- Esse grafo tem quantos camihos eulerianos?\n100- Sair.\nDigite a opcao: ");
 		scanf("%d",&opt);
 		printf("\n");
 		switch (opt){
 			case 1:
-				printf("Eu estou em %s\n",getNodeName(N,me));
+				opt_loop=2;
+				while (opt_loop !=1){
+					printf("Digite o nome do no (recomendo ser uma letra): ");
+					scanf("%s",&opt_char);
+					printf("\nConfirmar: %s? (1- Sim)\n",opt_char);
+					scanf("%d",&opt_loop);
+				}
+					me = 1;
+					createNode(N,opt_char);
 				break;
-			case 2:
-				printf("digite o id do lugar que voce quer ir: ");
-				scanf("%d",&opt);
-				me = gotoNode(me,opt,P,N);
-				printf("\n");
+			case 2:	
+				opt_loop=2;
+				while (opt_loop !=1){
+					printf("Digite o nome da primeira ponta da aresta: ");
+					scanf("%s",&opt_char);
+					opt_aux= getNodeId(N,opt_char);
+					printf("Digite o nome da segunda ponta da aresta: ");
+					scanf("%s",&opt_char);
+					opt_aux_duo= getNodeId(N,opt_char);
+					printf("\nConfirmar (ID) %s - %s? (1- Sim)\n",getNodeName(N,opt_aux),getNodeName(N,opt_aux_duo));
+					scanf("%d",&opt_loop);
+				}
+					createPath(P,opt_aux,opt_aux_duo);
 				break;
 			case 3:
-				printf("digite o id do lugar que voce quer ir: ");
-				scanf("%d",&opt);
-				me = gotoNode(me,opt,P,N,1);
+				printf("digite o nome do no que voce quer ir: ");
+				scanf("%s",&opt_char);
+				me = gotoNode(me,getNodeId(N,opt_char),P,N);
 				printf("\n");
 				break;
 			case 4:
-				printAllNode(N);
+				printf("digite o nome do nome que voce quer ir: ");
+				scanf("%s",&opt_char);
+				me = gotoNode(me,getNodeId(N,opt_char),P,N,1);
+				printf("\n");
 				break;
 			case 5:
-				printAllPath(N,P);
+				printAllNode(N);
 				break;
 			case 6:
-				resetFlag(P);
+				printAllPath(N,P);
 				break;
 			case 7:
-				checkAllFlags(P);
+				resetFlag(P);
 				break;
 			case 8:
+				checkAllFlags(P);
+				break;
+			case 9:
 				printAllPath(N,P);
 				printf("\n\n");
 				printAllPath(N,copyAllPaths(P));
 				break;
-			case 9:
+			case 10:
 				printf("digite o id do comodo que voce quer checar: ");
-				scanf("%d",&opt);
-				printf("\nForam encontrado %d caminhos possiveis",possiblePaths(P,opt));
+				scanf("%d",&opt_loop);
+				printf("\nForam encontrado %d caminhos possiveis",possiblePaths(P,opt_loop));
 				printf("\n");
 				break;
-			case 10:
-				opt = 0;
-				isEulerian(P,N,me,&opt);
-				if (opt>0)
-					printf("\n\n\nForam encontrados %d caminhos eulerianos.\n",opt);
+			case 11:
+				opt_loop = 0;
+				isEulerian(P,N,me,&opt_loop);
+				if (opt_loop>0)
+					printf("\n\n\nForam encontrados %d caminhos eulerianos.\n",opt_loop);
 				else
-					printf("\n\n\nNao foram encontrados caminhos eulerianos.\n",opt);
+					printf("\n\n\nNao foram encontrados caminhos eulerianos.\n",opt_loop);
+				break;
+			case 100:
+				system("cls");
+				printf("saindo do programa.");
 				break;
 			default:
 				printf("Opcao invalida.\n");
