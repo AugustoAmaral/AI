@@ -70,7 +70,7 @@ void createPath (Path*, int, int, int = 0);
 
 int getNodeId(Node* N, char nome[40]){ //RETORNA O ID DO NÓ CUJO NOME FOI PASSADO
 	if (N == NULL){
-		printf("No recebido e nulo(GNI).\n");
+		printf("No recebido nao existe (GNI).\n");
 		return 0;
 	}
 	if (strcmp(nome,N->nome) == 0)
@@ -85,7 +85,7 @@ void printNode (Node* N){ //PRINTA O NÓ PASSADO
 
 char* getNodeName (Node* N, int id){ // RETORNA O NOME DO NÓ COM O ID PASSADO
 	if (N == NULL){
-		printf("No recebido e nulo(GNN).\n");
+		printf("No recebido nao existe (GNN).\n");
 		return 0;
 	}
 	if (N->id == id)
@@ -100,7 +100,7 @@ void printPath (Node* N, Path* P){ //PRINTA TO CAMINHO QUE FOI PASSADO E SEU ID
 
 void printAllPath (Node* N, Path* P){ //MOSTRA TODOS OS CAMINHOS DISPONIVEIS
 	if (P == NULL){
-		printf("Caminho recebido e nulo.\n");
+		printf("Caminho recebido nao existe (PAP).\n");
 		exit(0);
 	}
 	printPath(N,P);
@@ -110,7 +110,7 @@ void printAllPath (Node* N, Path* P){ //MOSTRA TODOS OS CAMINHOS DISPONIVEIS
 
 void printAllNode (Node* N){ //MOSTRA TODOS OS NÓS EXISTENTES
 	if (N == NULL){
-		printf("No recebido e nulo.(PAN)\n");
+		printf("No recebido nao existe (PAN).\n");
 		exit(0);
 	}
 	printNode(N);
@@ -139,7 +139,7 @@ Path* f_path(){ //INICIA O PRIMEIRO CAMINHO
 void createPath (Path* P, int a, int b,int flag){ //CRIA O CAMINHO DE A ATÉ B
 	int temp=0;	
 	if (P == NULL){
-		printf("No recebido e nulo(CP).\n");
+		printf("No recebido nao existe (CP).\n");
 		exit(0);
 	}
 	if (P->a == 0){
@@ -166,7 +166,7 @@ void createPath (Path* P, int a, int b,int flag){ //CRIA O CAMINHO DE A ATÉ B
 
 void createNode (Node* N, char* nome){ //CRIA O NÓ COM O NOME PASSADO
 	if (N == NULL){
-		printf("No recebido e nulo(CN).\n");
+		printf("No recebido nao existe. (CN).\n");
 		exit(0);
 	}
 	if (N->id == 0){
@@ -341,7 +341,7 @@ Path* copyAllPaths(Path* P){
 
 int possiblePaths(Path* P, int me){
 	if (P == NULL){
-		printf("No recebido e nulo (PP)\n");
+		printf("No recebido nao existe (PP)\n");
 	}
 	if (((P->a == me) || (P->b == me)) && P->flag == 0) //AQUI EU TO CONSIDERANDO IDA E VOLTA, OU SEJA, NO SEM DIREÇÃO
 		if (P->prox == NULL)
@@ -397,7 +397,6 @@ void isEulerian (Path* P, Node* N, int me, int *answer){ //ANSWER precisa ser pa
 	}
 	else if (paths == 0){
 		*answer = *answer + checkAllFlags(P);
-		printf("\n\n(DEBUG)Answer: %d.\n\n",*answer);
 	}
 }
 
