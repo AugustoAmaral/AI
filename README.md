@@ -1,0 +1,2 @@
+Toda documentação simplificada sobre esse programa e suas funções podem ser encontradas no link a seguir: https://docs.google.com/document/d/1osmiqAf8HBCPDCbp4BoEN47wjpgmg6gfvdFifvi2R8M/edit?usp=sharing
+Qualquer duvida só criar uma issue ou me mandar um e-mail para guto_wow@pq.uenf.br que responderei assim que possivel. 

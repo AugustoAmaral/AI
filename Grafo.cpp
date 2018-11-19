@@ -512,9 +512,9 @@ int main() {
 				printAllPath(N,copyAllPaths(P));
 				break;
 			case 10:
-				printf("digite o id do comodo que voce quer checar: ");
-				scanf("%d",&opt_loop);
-				printf("\nForam encontrado %d caminhos possiveis",possiblePaths(P,opt_loop));
+				printf("digite o nome do no que voce quer checar: ");
+				scanf("%s",&opt_char);
+				printf("\nForam encontrados %d caminhos possiveis",possiblePaths(P,getNodeId(N,opt_char)));
 				printf("\n");
 				break;
 			case 11:
